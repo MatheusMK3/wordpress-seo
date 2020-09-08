@@ -79,7 +79,11 @@ class Indexable_Post_Builder {
 		$indexable->object_id       = $post_id;
 		$indexable->object_type     = 'post';
 		$indexable->object_sub_type = $post->post_type;
-		$indexable->permalink       = $this->get_permalink( $post->post_type, $post_id );
+
+		// Only set permalink if post is published
+		if ( ! in_array( $post->post_status, ['draft', 'pending', 'auto-draft', 'future'] ) ) {
+			$indexable->permalink     = $this->get_permalink( $post->post_type, $post_id );
+		}
 
 		$indexable->primary_focus_keyword_score = $this->get_keyword_score(
 			$this->get_meta_value( $post_id, 'focuskw' ),
